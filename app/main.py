@@ -1,3 +1,4 @@
+```python
 import logging
 from telegram import Update
 from telegram.ext import (
@@ -57,11 +58,11 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await capture_network(update, context)
 
     if (
-    data.startswith(CB_ADMIN_APPROVE_DEPOSIT)
-    or data.startswith(CB_ADMIN_REJECT_DEPOSIT)
-    or data.startswith(CB_ADMIN_APPROVE_WITHDRAW)
-    or data.startswith(CB_ADMIN_REJECT_WITHDRAW)
-):
+        data.startswith(CB_ADMIN_APPROVE_DEPOSIT)
+        or data.startswith(CB_ADMIN_REJECT_DEPOSIT)
+        or data.startswith(CB_ADMIN_APPROVE_WITHDRAW)
+        or data.startswith(CB_ADMIN_REJECT_WITHDRAW)
+    ):
         await handle_admin_action(update, context); return
 
 async def handle_admin_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -102,12 +103,17 @@ async def daily_profit_job(context: ContextTypes.DEFAULT_TYPE):
     users = cur.fetchall()
     for u in users:
         total_base = float(u["balance"]) + float(u["in_process"])
-        if total_base <= 0: continue
+        if total_base <= 0: 
+            continue
         profit = total_base * DAILY_PROFIT_RATE
-        conn.execute("UPDATE users SET balance = balance + ?, daily_profit = daily_profit + ?, total_profit = total_profit + ? WHERE id = ?",
-                     (profit, profit, profit, u["id"]))
-        conn.execute("INSERT INTO transactions (user_id, type, amount, status) VALUES (?, ?, ?, ?)",
-                     (u["id"], TX_PROFIT, profit, ST_CREDITED))
+        conn.execute(
+            "UPDATE users SET balance = balance + ?, daily_profit = daily_profit + ?, total_profit = total_profit + ? WHERE id = ?",
+            (profit, profit, profit, u["id"])
+        )
+        conn.execute(
+            "INSERT INTO transactions (user_id, type, amount, status) VALUES (?, ?, ?, ?)",
+            (u["id"], TX_PROFIT, profit, ST_CREDITED)
+        )
     conn.commit(); conn.close()
 
 async def reset_daily_profit_job(context: ContextTypes.DEFAULT_TYPE):
@@ -117,7 +123,8 @@ async def reset_daily_profit_job(context: ContextTypes.DEFAULT_TYPE):
     conn.commit(); conn.close()
 
 def build_app():
-    if not BOT_TOKEN: raise RuntimeError("BOT_TOKEN is not set.")
+    if not BOT_TOKEN: 
+        raise RuntimeError("BOT_TOKEN is not set.")
     init_db()
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
@@ -172,3 +179,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
