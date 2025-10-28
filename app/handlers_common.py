@@ -14,13 +14,21 @@ def format_balance_row(u) -> str:
         f"Your personal manager: {SUPPORT_HANDLE}"
     )
 
+from telegram import Update
+from telegram.ext import ContextTypes
+from keyboards import main_menu_kb
+from utils import safe_edit_message_text
+
 async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = "AiCrypto Investment Bot\nChoose an option below."
+    text = (
+        "AiCrypto Investment Bot\n\n"
+        "Select an option below."
+    )
     if update.callback_query:
-        await update.callback_query.edit_message_text(text=text, reply_markup=main_menu_kb())
-        await update.callback_query.answer()
+        await safe_edit_message_text(update.callback_query, text, reply_markup=main_menu_kb())
     else:
-        await update.message.reply_text(text, reply_markup=main_menu_kb())
+        await update.message.reply_text(text=text, reply_markup=main_menu_kb())
+
 
 async def on_balance(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = get_or_create_user(update.effective_user.id)
