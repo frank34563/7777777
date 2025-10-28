@@ -56,7 +56,12 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if data in (CB_NETWORK_TRC20, CB_NETWORK_ERC20, CB_NETWORK_BEP20):
         return await capture_network(update, context)
 
-    if data.startswith(CB_ADMIN_APPROVE_DEPOSIT) or data.startswith(CB_ADMIN_REJECT_DEPOSIT) or \       data.startswith(CB_ADMIN_APPROVE_WITHDRAW) or data.startswith(CB_ADMIN_REJECT_WITHDRAW):
+    if (
+    data.startswith(CB_ADMIN_APPROVE_DEPOSIT)
+    or data.startswith(CB_ADMIN_REJECT_DEPOSIT)
+    or data.startswith(CB_ADMIN_APPROVE_WITHDRAW)
+    or data.startswith(CB_ADMIN_REJECT_WITHDRAW)
+):
         await handle_admin_action(update, context); return
 
 async def handle_admin_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
